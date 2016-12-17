@@ -6,9 +6,9 @@ Proxmox.
 
 le-godaddy-dns is a [Let's encrypt](https://letsencrypt.org/) module,
 designed to be used as a hook with
-[letsencrypt.sh](https://github.com/lukas2511/letsencrypt.sh) for
-[DNS-based validation](https://github.com/lukas2511/letsencrypt.sh/blob/master/docs/dns-verification.md)
-against Godaddy DNS.
+[dehydrated](https://github.com/lukas2511/dehydrated) for
+[DNS-based validation](https://github.com/lukas2511/dehydrated/blob/master/docs/dns-verification.md)
+against GoDaddy DNS.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ To use this module you will need the following:
 * python3
 * godaddypy python3 module
 * [Production Godaddy API keys](https://developer.godaddy.com/keys/)
-* OpenSSL (or basically whatever `letsencrypt.sh` depends on)
+* OpenSSL (or basically whatever `dehydrated` depends on)
 
 ## Usage
 
@@ -27,7 +27,7 @@ To use this module you will need the following:
 You are letting a program meddle with your DNS. Bugs happen. Shit
 happens. Be prepared.
 
-First you need to download all dependencies and configure `letsencrypt.sh`.
+First you need to download all dependencies and configure `dehydrated`.
 
 ````bash
 # get dependencies
@@ -39,17 +39,17 @@ ROOTDIR=$HOME/letsencrypt
 mkdir -p $ROOTDIR
 cd $ROOTDIR
 
-# get letsencrypt.sh
-git clone https://github.com/lukas2511/letsencrypt.sh
+# get dehydrated
+git clone https://github.com/lukas2511/dehydrated
 # get le-godaddy-dns
 git clone https://github.com/josteink/le-godaddy-dns
 
-# configure letsencrypt.sh
-cd $ROOTDIR/letsencrypt.sh
+# configure dehydratedh
+cd $ROOTDIR/dehydrated
 nano domains.txt
 
-# the format for domains.txt is documented in letsencrypt.sh's repo.
-# https://github.com/lukas2511/letsencrypt.sh/blob/master/docs/domains_txt.md
+# the format for domains.txt is documented in dehydrated's repo.
+# https://github.com/lukas2511/dehydrated/blob/master/docs/domains_txt.md
 cat domains.txt
 mydomain.com sub.mydomain.com
 example.com
@@ -63,9 +63,9 @@ Now you need to configure `le-godaddy-dns` and retrieve your certs.
 export GD_KEY=your_key_here
 export GD_SECRET=your_secret_here
 
-# run letsencrypt.sh in "cron" mode (-c)
+# run dehydrated in "cron" mode (-c)
 # this creates CSRs, keys and everything we need automatically for us.
-./letsencrypt.sh --challenge dns-01 -k $ROOTDIR/le-godaddy-dns/godaddy.py -c
+./dehydrated --challenge dns-01 -k $ROOTDIR/le-godaddy-dns/godaddy.py -c
 
 ````
 
@@ -83,8 +83,8 @@ find . -name fullchain.pem -exec openssl x509 -in '{}' -subject -noout \;
 ````
 
 You may also decide to customize the `deploy_certificates` hook in
-`goddady.py` if you want the certificates automatically copied
-to another destination than the one provided by `letsencrypt.sh`.
+`goddaddy.py` if you want the certificates automatically copied
+to another destination than the one provided by `dehydrated`.
 
 # Disclaimer
 
