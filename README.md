@@ -1,5 +1,8 @@
 
-# le-godaddy-dns
+# le-godaddy-dns-pve
+
+le-godaddy-dns-pve is a fork of le-godaddy-dns that automatically deploys new certificates to
+Proxmox.
 
 le-godaddy-dns is a [Let's encrypt](https://letsencrypt.org/) module,
 designed to be used as a hook with

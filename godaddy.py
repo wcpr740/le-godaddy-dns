@@ -2,6 +2,8 @@
 
 import os
 import sys
+import shutil
+import subprocess
 import logging
 import godaddypy
 
@@ -10,6 +12,8 @@ if "GD_KEY" not in os.environ:
 
 if "GD_SECRET" not in os.environ:
     raise Exception("Missing Godaddy API-secret in GD_SECRET environment variable! Please register one at https://developer.godaddy.com/keys/")
+
+PVE_NODE_DIR = '/etc/pve/nodes/'
 
 api_key = os.environ["GD_KEY"]
 api_secret = os.environ["GD_SECRET"]
@@ -66,8 +70,21 @@ def delete_txt_record(args):
 
 def deploy_cert(args):
     domain, privkey_pem, cert_pem, fullchain_pem, chain_pem, timestamp = args
+
     logger.info(' + ssl_certificate: {0}'.format(fullchain_pem))
     logger.info(' + ssl_certificate_key: {0}'.format(privkey_pem))
+
+    # copy certs to each node
+    for node in os.listdir(PVE_NODE_DIR):
+        if not os.path.isdir(os.path.join(PVE_NODE_DIR, node)):
+            continue  # only use real nodes... in case there are random files in the folder
+
+        shutil.copy(fullchain_pem, os.path.join(PVE_NODE_DIR, node, 'pveproxy-ssl.pem'))
+        shutil.copy(privkey_pem, os.path.join(PVE_NODE_DIR, node, 'pveproxy-ssl.key'))
+
+    # restart PVE
+    subprocess.call('systemctl restart pveproxy', shell=True)
+
     return
 
 
