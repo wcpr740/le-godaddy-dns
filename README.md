@@ -42,7 +42,7 @@ cd $ROOTDIR
 # get dehydrated
 git clone https://github.com/lukas2511/dehydrated
 # get le-godaddy-dns
-git clone https://github.com/josteink/le-godaddy-dns
+git clone https://github.com/wcpr740/le-godaddy-dns
 
 # configure dehydratedh
 cd $ROOTDIR/dehydrated
